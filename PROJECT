@@ -1,0 +1,7 @@
+domain: vaxly.io
+layout: go.kubebuilder.io/v2
+projectName: ghost-operator
+repo: github.com/vaxly/ghost-operator
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}

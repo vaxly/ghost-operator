@@ -1,0 +1,20 @@
+# permissions for end users to view blogs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: blog-viewer-role
+rules:
+- apiGroups:
+  - ghost.vaxly.io
+  resources:
+  - blogs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ghost.vaxly.io
+  resources:
+  - blogs/status
+  verbs:
+  - get

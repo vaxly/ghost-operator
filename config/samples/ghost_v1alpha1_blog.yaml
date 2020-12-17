@@ -13,15 +13,18 @@ spec:
     enabled: true
     tls:
       enabled: true
-      secretName: blog-vaxly-io-prod
+      secretName: blog-vaxly-io-prod  # Must change
     hosts:
-      - blog.vaxly.io
+      - blog.vaxly.io # Must change
     annotations:
       kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-prod
+      cert-manager.io/cluster-issuer: letsencrypt-prod # Must change
       kubernetes.io/tls-acme: "true"
   config:
-    url: https://blog.vaxly.io
+    url: https://blog.vaxly.io  # Must change
+    server:
+      host: 0.0.0.0
+      port: 80
     mail:
       transport: direct
     logging:
@@ -33,5 +36,5 @@ spec:
         host: localhost
         port: 3306
         user: root
-        password: secret
+        password: secret  # Must change
         database: ghostdb

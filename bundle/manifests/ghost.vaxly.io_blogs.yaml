@@ -1,0 +1,194 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: blogs.ghost.vaxly.io
+spec:
+  group: ghost.vaxly.io
+  names:
+    kind: Blog
+    listKind: BlogList
+    plural: blogs
+    singular: blog
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Blog is the Schema for the blogs API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: BlogSpec defines the desired state of Blog
+          properties:
+            config:
+              description: Ghost configuration. This field will be written as ghost configuration. Saved in configmap and mounted in /etc/ghost/config/config.json and symlinked to /var/lib/ghost/config.production.json
+              properties:
+                database:
+                  description: GhostDatabase defines ghost database config.
+                  properties:
+                    client:
+                      description: Client is ghost database client.
+                      enum:
+                      - sqlite3
+                      - mysql
+                      type: string
+                    connection:
+                      description: GhostDatabaseConnection defines ghost database connection.
+                      properties:
+                        database:
+                          description: mysql database name
+                          type: string
+                        filename:
+                          description: sqlite filename.
+                          type: string
+                        host:
+                          description: mysql host
+                          type: string
+                        password:
+                          description: mysql database password of user
+                          type: string
+                        port:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: mysql port
+                          x-kubernetes-int-or-string: true
+                        user:
+                          description: mysql database user
+                          type: string
+                      type: object
+                  required:
+                  - client
+                  type: object
+                logging:
+                  description: Logging defines ghost logging type config.
+                  properties:
+                    transports:
+                      items:
+                        type: string
+                      type: array
+                  required:
+                  - transports
+                  type: object
+                mail:
+                  description: Mail defines ghost mail config.
+                  properties:
+                    transport:
+                      type: string
+                  required:
+                  - transport
+                  type: object
+                server:
+                  properties:
+                    host:
+                      type: string
+                    port:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      x-kubernetes-int-or-string: true
+                  required:
+                  - host
+                  - port
+                  type: object
+                url:
+                  type: string
+              required:
+              - database
+              - logging
+              - mail
+              - server
+              - url
+              type: object
+            image:
+              description: 'Ghost container image, by default using latest ghost image from docker hub registry. NOTE: This operator only support ghost image from docker official image. https://hub.docker.com/_/ghost/'
+              type: string
+            ingress:
+              description: GhostIngress defines ingress
+              properties:
+                annotations:
+                  additionalProperties:
+                    type: string
+                  description: 'Additional annotations passed to ".metadata.annotations" in networking.k8s.io/ingress object. This is useful for configuring ingress through annotation field like: ingress-class, static-ip, etc'
+                  type: object
+                enabled:
+                  type: boolean
+                hosts:
+                  items:
+                    type: string
+                  type: array
+                  x-kubernetes-list-type: set
+                tls:
+                  description: GhostIngressTLS defines ingress tls
+                  properties:
+                    enabled:
+                      type: boolean
+                    secretName:
+                      type: string
+                  required:
+                  - enabled
+                  - secretName
+                  type: object
+              required:
+              - enabled
+              type: object
+            persistent:
+              description: GhostPersistent defines peristent volume
+              properties:
+                enabled:
+                  type: boolean
+                size:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  description: size of storage
+                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                  x-kubernetes-int-or-string: true
+                storageClass:
+                  description: If not defined, default will be used
+                  type: string
+              required:
+              - enabled
+              - size
+              type: object
+            replicas:
+              description: Ghost deployment repicas
+              format: int32
+              type: integer
+            serviceType:
+              description: Service Type string describes ingress methods for a service
+              type: string
+          required:
+          - config
+          type: object
+        status:
+          description: BlogStatus defines the observed state of Blog
+          properties:
+            dbHost:
+              type: string
+            replicas:
+              format: int32
+              type: integer
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

@@ -1,5 +1,5 @@
 # Current Operator version
-VERSION ?= 0.0.1
+VERSION ?= 0.0.5
 # Default bundle image tag
 BUNDLE_IMG ?= controller-bundle:$(VERSION)
 # Options for 'bundle-build'
@@ -12,7 +12,7 @@ endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= vaxlyio/ghost-operator
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
@@ -71,11 +71,13 @@ generate: controller-gen
 
 # Build the docker image
 docker-build: test
-	docker build . -t ${IMG}
+	docker build . -t ${IMG}:${VERSION}
+	docker tag  ${IMG}:${VERSION} ${IMG}:latest
 
 # Push the docker image
-docker-push:
-	docker push ${IMG}
+docker-push: docker-build
+	docker push ${IMG}:${VERSION}
+	docker push ${IMG}:latest
 
 # find or download controller-gen
 # download controller-gen if necessary

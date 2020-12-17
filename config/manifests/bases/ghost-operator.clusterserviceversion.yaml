@@ -1,0 +1,53 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.2.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+  name: ghost-operator.vX.Y.Z
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Blog is the Schema for the blogs API
+      displayName: Blog
+      kind: Blog
+      name: blogs.ghost.vaxly.io
+      version: v1alpha1
+  description: Deploy the ghost blogging platform using kubernets operator framework
+  displayName: ghost-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - ghost
+  - operator
+  - blog
+  - kubernetes
+  - k8s
+  links:
+  - name: Ghost Operator
+    url: https://ghost-operator.domain
+  maintainers:
+  - email: vaxlyio@gmail.com
+    name: vaxly
+  maturity: alpha
+  provider:
+    name: vaxly
+  version: 0.0.0
